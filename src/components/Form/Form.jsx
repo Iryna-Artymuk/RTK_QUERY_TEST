@@ -3,24 +3,48 @@ import toast from 'react-hot-toast';
 import { BiMailSend } from 'react-icons/bi';
 import styles from './Form.module.css';
 
+import {useAddCommentsMutation} from "../../redux/commentApi"
+import { Spinner } from '../Spinner/Spinner';
+
+
 export const Form = () => {
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
+const [ addComments,{isLoading}]=useAddCommentsMutation()
+// const data=useAddCommentsMutation()
+// console.log(' data: ',  data);
 
   const onHandleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    switch (name) {
+      case "name":
+        setAuthor(value )
+        break
+      case "text":
+        setContent( value)
+        break
+      default:
+      return 
+      }
   };
 
-  const onHandleSubmit = (e) => {
+  const onHandleSubmit = async(e) => {
     e.preventDefault();
+    try {
+      await  addComments({ author, content})
+      toast.success("Comment added")
+    } catch (error) {
+      toast.error(error.message)
+    }
 
     setAuthor('');
     setContent('');
   };
 
   return (
+
     <div className={styles.formWrapper}>
+
       <form className={styles.form} onSubmit={onHandleSubmit}>
         <label className={styles.label}>
           <span className={styles.labelName}>Full name</span>
@@ -45,8 +69,9 @@ export const Form = () => {
         </label>
 
         <button className={styles.formBtn}>
-          <BiMailSend className={styles.icon} />
-          Send
+       { isLoading? <Spinner/> : <>   <BiMailSend className={styles.icon} />
+          Send</>}
+        
         </button>
       </form>
     </div>
