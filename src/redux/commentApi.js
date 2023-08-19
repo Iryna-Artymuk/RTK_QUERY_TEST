@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const API_ENDPOINT = "/comments";
+
 const BASE_URL = "https://64e0741550713530432c53b7.mockapi.io";
 
 export const commentApi = createApi({
@@ -14,16 +15,28 @@ export const commentApi = createApi({
       query: () => API_ENDPOINT,
       providesTags: ["Comments"],
     }),
+
     addComments: builder.mutation({
-      query: (comment) =>({
+      query: (comment) => ({
         url: API_ENDPOINT,
-        method: 'POST',
+        method: "POST",
         body: comment,
-      } ),
+      }),
+      invalidatesTags: ["Comments"],
+    }),
+    updateCommentCount: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `${API_ENDPOINT}/${id}`,
+        method: "PUT",
+        body,
+      }),
       invalidatesTags: ["Comments"],
     }),
   }),
 });
 
-export const { useGetCommentsQuery,useAddCommentsMutation} = commentApi;
-
+export const {
+  useGetCommentsQuery,
+  useAddCommentsMutation,
+  useUpdateCommentCountMutation,
+} = commentApi;

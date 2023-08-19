@@ -7,6 +7,7 @@ import { Loader } from "../Loader/Loader";
 
 export const Comments = () => {
   const { data: comments, isLoading } = useGetCommentsQuery();
+  console.log("comments: ", comments);
 
   return (
     <>
